@@ -98,3 +98,8 @@ var bishopOne = grid.getSpecificPiece('black', 'bishops', 3);
 console.log(bishopOne);
 var bishopTwo = grid.getSpecificPiece('white', 'bishops', 3);
 console.log(bishopTwo);
+
+var knightOne = grid.getSpecificPiece('black', 'knights', 2);
+console.log(knightOne);
+knightOne.move(3, 3, grid);
+console.log(grid);
