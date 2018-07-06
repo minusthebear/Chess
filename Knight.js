@@ -67,7 +67,7 @@ Knight.prototype.move = function(x, y, grid) {
     function setPosition(x, y, board) {
         this.position.x = x;
         this.position.y = y;
-        console.log('#######################\nSUCCESS!!!!\n#######################');
+        console.log('#######################\nKNIGHT MOVES!!!!\n#######################');
         console.log(this);
     }
 }
