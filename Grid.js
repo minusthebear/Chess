@@ -51,6 +51,11 @@ Grid.prototype.getSpecificPiece = function(color, piece, id) {
     }
 }
 
+Grid.prototype.setPiece = function(x, y, oldX, oldY, obj) {
+    this.grid[oldX][oldY] = null;
+    this.grid[x][y] = obj;
+}
+
 Grid.prototype.splicePiece = function(obj) {
     // TODO: see if this works
     var piece = this.getPieceType.call(this, obj);
@@ -69,25 +74,27 @@ Grid.prototype.splicePiece = function(obj) {
 }
 
 Grid.prototype.getPieceType = function(obj) {
-    if (obj instanceof require('./Rook')) {
-        return "rooks";
-    } else if (obj instanceof require('./Pawn')) {
-        return "pawns";
-    } else if (obj instanceof require('./Bishop')) {
-        return "bishops";
-    } else if (obj instanceof require('./Knight')) {
-        console.log("knights");
-        return "knights";
-        // } else if (obj instanceof Queen) {
-        //     console.log("queens");
-        //     return "queens";
-        // } else if (obj instanceof King) {
-        //     console.log("king")
-        //     return "king";
+    console.log(obj);
 
-    } else {
-        return null;
-    }
+    // if (obj instanceof require('./Rook')) {
+    //     return "rooks";
+    // } else if (obj instanceof require('./Pawn')) {
+    //     return "pawns";
+    // } else if (obj instanceof require('./Bishop')) {
+    //     return "bishops";
+    // } else if (obj instanceof require('./Knight')) {
+    //     console.log("knights");
+    //     return "knights";
+    // } else if (obj instanceof Queen) {
+    //     console.log("queens");
+    //     return "queens";
+    // } else if (obj instanceof King) {
+    //     console.log("king")
+    //     return "king";
+
+    // } else {
+    //     return null;
+    // }
 }
 
 Grid.prototype.boundaryCheck = function(x, y) {

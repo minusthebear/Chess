@@ -5,6 +5,7 @@ var splicePiece = require('./records').splicePiece,
     Knight = require('./Knight'),
     Bishop = require('./Bishop'),
     Rook = require('./Rook'),
+    Queen = require('./Queen'),
     Grid = require('./Grid');
 
 var grid = new Grid('matthew');
@@ -43,28 +44,29 @@ function initializeGame() {
         }
 
         allObjects[color] = {};
-        allObjects[color].pawns = initializePawns(grid, color, homeTeam, initFrontYPosition);
-        allObjects[color].bishops = initializeBishops(grid, color, homeTeam, initRearYPosition);
-        allObjects[color].knights = initializeKnights(grid, color, homeTeam, initRearYPosition);
-        allObjects[color].rooks = initializeRooks(grid, color, homeTeam, initRearYPosition);
+        allObjects[color].pawns = initializePawns(grid, homeTeam, initFrontYPosition);
+        allObjects[color].bishops = initializeBishops(grid, homeTeam, initRearYPosition);
+        allObjects[color].knights = initializeKnights(grid, homeTeam, initRearYPosition);
+        allObjects[color].rooks = initializeRooks(grid, homeTeam, initRearYPosition);
+        allObjects[color].queens = initializeQueens(grid, homeTeam, initRearYPosition);
     }
     grid.setAllObjects(allObjects);
 }
 
-function initializePawns(grid, color, team, Y) {
+function initializePawns(grid, team, Y) {
     var pawns = [];
 
     for (var i = grid.boundary.min; i <= grid.boundary.max; i++) {
-        var pwn = new Pawn(i, Y, team);
+        var pwn = new Pawn(i, Y, 'Pawn', team);
         pawns.push(pwn);
         grid.setStartPosOnGrid(i, Y, pwn);
     }
     return pawns;
 }
 
-function initializeBishops(grid, color, team, Y) {
-    var bishopOne = new Bishop(3, Y, team),
-        bishopTwo = new Bishop(6, Y, team),
+function initializeBishops(grid, team, Y) {
+    var bishopOne = new Bishop(3, Y, 'Bishop', team),
+        bishopTwo = new Bishop(6, Y, 'Bishop', team),
         bishops = [bishopOne, bishopTwo];
 
     grid.setTwoStartPosOnGrid([3, Y, bishopOne], [6, Y, bishopTwo]);
@@ -72,9 +74,9 @@ function initializeBishops(grid, color, team, Y) {
     return bishops;
 }
 
-function initializeKnights(grid, color, team, Y) {
-    var knightOne = new Knight(2, Y, team),
-        knightTwo = new Knight(7, Y, team),
+function initializeKnights(grid, team, Y) {
+    var knightOne = new Knight(2, Y, 'Knight', team),
+        knightTwo = new Knight(7, Y, 'Knight', team),
         knights = [knightOne, knightTwo];
 
     grid.setTwoStartPosOnGrid([2, Y, knightOne], [7, Y, knightTwo]);
@@ -82,14 +84,21 @@ function initializeKnights(grid, color, team, Y) {
     return knights;
 }
 
-function initializeRooks(grid, color, team, Y) {
-    var rookOne = new Rook(1, Y, team),
-        rookTwo = new Rook(8, Y, team),
+function initializeRooks(grid, team, Y) {
+    var rookOne = new Rook(1, Y, 'Rook', team),
+        rookTwo = new Rook(8, Y, 'Rook', team),
         rooks = [rookOne, rookTwo];
 
     grid.setTwoStartPosOnGrid([1, Y, rookOne], [8, Y, rookTwo]);
 
     return rooks;
+}
+
+function initializeQueens(grid, team, Y) {
+    var queen = new Queen(4, Y, 'Queen', team)
+    grid.setStartPosOnGrid(4, Y, queen);
+
+    return queen;
 }
 
 initializeGame();

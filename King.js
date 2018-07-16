@@ -225,4 +225,13 @@ Queen.prototype.checkPiece = function(grid, numX, oldNumX, numY, oldNumY) {
     }
 };
 
-module.exports = Queen;
+module.exports = Queen;rid[numX][numY];
+        this.setGridDiagonal.apply(this, [grid, numX, oldNumX, numY, oldNumY]);
+        grid.splicePiece(oldObj);
+        return true;
+    } else {
+        return false;
+    }
+};
+
+module.exports = King;

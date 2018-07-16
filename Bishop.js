@@ -3,8 +3,8 @@
 var Grid = require('./Grid'),
     Piece = require('./Piece');
 
-var Bishop = function(x, y, color) {
-    Piece.call(this, x, y, color);
+var Bishop = function(x, y, type, color) {
+    Piece.call(this, x, y, type, color);
 };
 
 Bishop.prototype = Object.create(Piece.prototype);

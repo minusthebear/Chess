@@ -5,8 +5,8 @@ var grid = require('./Grid'),
     // fix grid somehow;
     records = require('./records');
 
-var Pawn = function(x, y, color) {
-    Piece.call(this, x, y, color);
+var Pawn = function(x, y, type, color) {
+    Piece.call(this, x, y, type, color);
     this.firstMove = true;
     this.initYPosition = y;
 };
