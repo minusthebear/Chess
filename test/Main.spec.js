@@ -55,18 +55,29 @@ describe('Main.js', function() {
 	});
 
 	describe('allObjects property should be set', function() {
-		it('allObjects should be set correctly', function() {
-			console.log(main.allObjects.white.queens);
+		it('Pawns should be set correctly', function() {
 			testAllObjects('white', 'pawns', 'Pawn', 8);
-			testAllObjects('white', 'bishops', 'Bishop', 2);
-			testAllObjects('white', 'knights', 'Knight', 2);
-			testAllObjects('white', 'queens', 'Queen', 1);
-			testAllObjects('white', 'rooks', 'Rook', 2);
 			testAllObjects('black', 'pawns', 'Pawn', 8);
+		});
+
+		it('Bishops should be set correctly', function() {
+			testAllObjects('white', 'bishops', 'Bishop', 2);
 			testAllObjects('black', 'bishops', 'Bishop', 2);
+		});
+		
+		it('Knights should be set correctly', function() {
+			testAllObjects('white', 'knights', 'Knight', 2);
 			testAllObjects('black', 'knights', 'Knight', 2);
-			testAllObjects('black', 'queens', 'Queen', 1);
+		});
+
+		it('Rooks should be set correctly', function() {
+			testAllObjects('white', 'rooks', 'Rook', 2);
 			testAllObjects('black', 'rooks', 'Rook', 2);
+		});
+
+		it('Queens should be set correctly', function() {
+			testAllObjects('white', 'queens', 'Queen', 1);
+			testAllObjects('black', 'queens', 'Queen', 1);
 		});
 	});
 
