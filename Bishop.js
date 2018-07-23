@@ -15,10 +15,11 @@ Bishop.prototype.move = function(x, y, grid) {
         return false;
     }
 
-    var yToCheck,
-        oldX = this.position.x,
-        oldY = this.position.y,
-        color = this.color;
+    var piece = this,
+        yToCheck,
+        oldX = piece.position.x,
+        oldY = piece.position.y,
+        color = piece.color;
 
     if (oldY === y || oldX === x) {
         return false;
@@ -34,7 +35,7 @@ Bishop.prototype.move = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX - i][oldY - i]) {
-                return this.checkPiece.apply(this, [grid, oldX - 1, oldX, oldY - 1, oldY]);
+                return piece.checkPiece.apply(piece, [grid, oldX - 1, oldX, oldY - 1, oldY]);
             }
         }
 
@@ -51,7 +52,7 @@ Bishop.prototype.move = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX - i][oldY + i]) {
-                return this.checkPiece.apply(this, [grid, oldX - 1, oldX, oldY + i, oldY]);
+                return piece.checkPiece.apply(piece, [grid, oldX - 1, oldX, oldY + i, oldY]);
             }
         }
 
@@ -68,7 +69,7 @@ Bishop.prototype.move = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX + i][oldY - i]) {
-                return this.checkPiece.apply(this, [grid, oldX + 1, oldX, oldY + i, oldY]);
+                return piece.checkPiece.apply(piece, [grid, oldX + 1, oldX, oldY + i, oldY]);
             }
         }
 
@@ -86,7 +87,7 @@ Bishop.prototype.move = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX - i][oldY - i]) {
-                return this.checkPiece.apply(this, [grid, oldX + 1, oldX, oldY + i, oldY]);
+                return piece.checkPiece.apply(piece, [grid, oldX + 1, oldX, oldY + i, oldY]);
             }
         }
 

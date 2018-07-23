@@ -15,7 +15,8 @@ Queen.prototype.moveStraight = function(x, y, grid) {
         return false;
     }
 
-    var yToCheck,
+    var piece = this,
+        yToCheck,
         oldX = this.position.x,
         oldY = this.position.y,
         board = grid.grid;

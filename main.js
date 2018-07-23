@@ -111,4 +111,4 @@ console.log(bishopTwo);
 var knightOne = grid.getSpecificPiece('black', 'knights', 2);
 console.log(knightOne);
 knightOne.move(3, 3, grid);
-console.log(grid);
+console.log(grid.allObjects.black.knights);

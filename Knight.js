@@ -18,20 +18,22 @@ Knight.prototype.move = function(x, y, grid) {
 
     var piece = this,
         board = grid.grid,
-        oldX = this.position.x,
-        oldY = this.position.y;
+        oldX = piece.position.x,
+        oldY = piece.position.y;
 
-    workingOnTheKnightMoves.call(this, x, y, oldX, oldY, board);
+    workingOnTheKnightMoves.call(piece, x, y, oldX, oldY, board);
 
     function workingOnTheKnightMoves(x, y, oldX, oldY, board) {
+        var piece = this;
+
         if (oldY === y || oldX === x) {
             return false;
         } else if (oldGreaterThanNew(y, oldY, 2) || newGreaterThanOld(y, oldY, 2)) {
-            checkBothAndSetPosition.call(this, x, y, oldX, x, board);
-            grid.setPiece(x, y, oldX, oldY, this);
+            checkBothAndSetPosition.call(piece, x, y, oldX, x, board);
+            grid.setPiece(x, y, oldX, oldY, piece);
         } else if (oldGreaterThanNew(x, oldX, 2) || newGreaterThanOld(x, oldX, 2)) {
-            checkBothAndSetPosition.call(this, x, y, oldY, y, board);
-            grid.setPiece(x, y, oldX, oldY, this);
+            checkBothAndSetPosition.call(piece, x, y, oldY, y, board);
+            grid.setPiece(x, y, oldX, oldY, piece);
         } else {
             console.log('Line 37');
             return false;
@@ -39,25 +41,24 @@ Knight.prototype.move = function(x, y, grid) {
     }
 
     function checkBothAndSetPosition(x, y, oldNum, nouveauNum, board) {
-        if (checkBoth(oldNum, nouveauNum, 1) && this.checkIfOppositeColor(board, x, y)) {
-            this.setPosition(x, y);
+        var piece = this;
+
+        if (checkBoth(oldNum, nouveauNum, 1) && piece.checkIfOppositeColor(board, x, y)) {
+            piece.setPosition(x, y);
         } else {
             return false;
         }
     }
 
     function oldGreaterThanNew(n, o, num) {
-        console.log('line 53');
         return (o > n && (o - n === num));
     }
 
     function newGreaterThanOld(n, o, num) {
-        console.log('line58');
         return (o < n && (n - o === num));
     }
 
     function checkBoth(n, o, num) {
-        console.log('Line 63');
         return oldGreaterThanNew(n, o, num) || newGreaterThanOld(n, o, num);
     }
 }

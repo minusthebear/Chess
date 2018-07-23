@@ -19,34 +19,37 @@ Pawn.prototype.moveForward = function(y, grid) {
         return false;
     }
 
-    var positionX = this.position.x,
-        oldY = this.position.y;
+    var piece = this,
+        positionX = piece.position.x,
+        oldY = piece.position.y;
 
-    if (this.untouched && this.firstMove) {
+    if (piece.untouched && piece.firstMove) {
         if (y < 1 && y >= 3) {
             return false;
         }
     }
 
-    if (!this.untouched && y !== 1) {
+    if (!piece.untouched && y !== 1) {
         return false;
     }
 
-    if (this.white) {
-        this.position.y -= y;
+    if (piece.white) {
+        piece.position.y -= y;
     } else {
-        this.position.y += y;
+        piece.position.y += y;
     }
 
     // Make so doesn't move if another player is in front.
 
     grid[positionX][oldY] = null;
-    grid[positionX][this.position.y] = this;
+    grid[positionX][piece.position.y] = piece;
 
-    this.untouched = false;
+    piece.untouched = false;
 };
 
 Pawn.prototype.passing = function(x, y, grid) {
+
+    var piece = this;
 
     if (!grid.boundaryCheck(x, y)) {
         return false;
@@ -58,8 +61,8 @@ Pawn.prototype.passing = function(x, y, grid) {
         }
     }
 
-    var oldX = this.position.x,
-        oldY = this.position.y;
+    var oldX = piece.position.x,
+        oldY = piece.position.y;
 
     // This is not correct, figure out correct function
     if (!grid[oldX - 1][oldY] && !grid[oldX + 1][oldY]) {
@@ -91,24 +94,25 @@ Pawn.prototype.take = function(x, y, grid) {
         }
     }
 
-    var oldX = this.position.x,
-        oldY = this.position.y;
+    var piece = this,
+        oldX = piece.position.x,
+        oldY = piece.position.y;
 
     if ((oldX - 1) !== x && (oldX + 1) !== x) {
         console.log('Not a valid X');
         return false;
     }
 
-    yToCheck = !!this.white ? oldY + 1 : oldY - 1;
+    yToCheck = !!piece.white ? oldY + 1 : oldY - 1;
 
     if (yToCheck !== y) {
         console.log(yToCheck);
         return false;
     }
 
-    if (grid[x][y] && (grid[x][y].white !== this.white)) {
+    if (grid[x][y] && (grid[x][y].white !== piece.white)) {
         console.log('Taken');
-        grid[x][y] = this;
+        grid[x][y] = piece;
     } else {
         console.log('Nobody here');
     }
