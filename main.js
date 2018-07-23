@@ -8,10 +8,8 @@ var splicePiece = require('./records').splicePiece,
     Queen = require('./Queen'),
     Grid = require('./Grid');
 
-var grid = new Grid('matthew');
-
 function initializeGrid() {
-    grid.setName('Balsac');
+    var grid = new Grid('matthew');
 
     for (var i = grid.boundary.min; i <= grid.boundary.max; i++) {
         grid.grid[i] = {};
@@ -51,6 +49,8 @@ function initializeGame() {
         allObjects[color].queens = initializeQueens(grid, homeTeam, initRearYPosition);
     }
     grid.setAllObjects(allObjects);
+
+    return grid;
 }
 
 function initializePawns(grid, team, Y) {
@@ -95,20 +95,10 @@ function initializeRooks(grid, team, Y) {
 }
 
 function initializeQueens(grid, team, Y) {
-    var queen = new Queen(4, Y, 'Queen', team)
+    var queen = new Queen(4, Y, 'Queen', team),
+        queens = [queen];
     grid.setStartPosOnGrid(4, Y, queen);
 
-    return queen;
+    return queens;
 }
-
-initializeGame();
-
-var bishopOne = grid.getSpecificPiece('black', 'bishops', 3);
-console.log(bishopOne);
-var bishopTwo = grid.getSpecificPiece('white', 'bishops', 3);
-console.log(bishopTwo);
-
-var knightOne = grid.getSpecificPiece('black', 'knights', 2);
-console.log(knightOne);
-knightOne.move(3, 3, grid);
-console.log(grid.allObjects.black.knights);
+module.exports = initializeGame();
