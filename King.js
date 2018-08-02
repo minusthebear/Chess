@@ -43,25 +43,19 @@ King.prototype.moveStraight = function(x, y, grid) {
         return false;
     }
 
-    try {
-        if (board[x][y]) {
+    if (board[x][y]) {
 
-            var oldObj;
+        var oldObj;
 
-            if (king.checkIfOppositeColor(board, x, y)) {
-                oldObj = board[x][y];
-                grid.splicePiece(oldObj);
-            } else {
-                return false;
-            }
+        if (king.checkIfOppositeColor(board, x, y)) {
+            oldObj = board[x][y];
+            grid.splicePiece(oldObj);
+        } else {
+            return false;
         }
-        king.setGridStraight(grid, x, oldX, y, oldY);
-        king.unTouched = false;
-
-    } catch (err) {
-        return false;
     }
-
+    king.setGridStraight(grid, x, oldX, y, oldY);
+    king.unTouched = false;
     return true;
 };
 
@@ -84,16 +78,17 @@ King.prototype.moveDiagonal = function(x, y, grid) {
     }
 
     var king = this,
+        board = grid.grid,
         oldX = king.position.x,
         oldY = king.position.y,
         xAbs = Math.abs(oldX - x),
         yAbs = Math.abs(oldY - y);
 
-    if (king.checkIfInCheck(x, y, grid)) {
+    if (king.checkIfInCheck(x, y, board)) {
         return false;
     }
 
-    if (moveDiagonal(x, y, oldX, oldY, xAbs, yAbs) && grid.grid[x][y]) {
+    if (moveDiagonal(x, y, oldX, oldY, xAbs, yAbs) && board[x][y]) {
         return king.checkPiece.apply(king, [grid, oldX - 1, oldX, oldY - 1, oldY]);
     }
     return false;
@@ -125,10 +120,11 @@ King.prototype.setGridDiagonal = function(grid, x, oldX, y, oldY) {
 
 King.prototype.checkPiece = function(grid, numX, oldNumX, numY, oldNumY) {
     var king = this,
-        oldObj;
+        oldObj,
+        board = grid.grid;
 
-    if (king.checkIfOppositeColor.apply(king, [grid.grid, numX, numY])) {
-        oldObj = grid.grid[numX][numY];
+    if (king.checkIfOppositeColor.apply(king, [board, numX, numY])) {
+        oldObj = board[numX][numY];
         king.setGridDiagonal.apply(king, [grid, numX, oldNumX, numY, oldNumY]);
         grid.splicePiece(oldObj);
         return true;
@@ -169,7 +165,7 @@ King.prototype.castle = function(rook, grid) {
         posX = { king: oldKingPos - 2, rook: oldRookPos + 3 };
     }
 
-    if (king.checkIfInCheck(posX.king, posY, grid)) {
+    if (king.checkIfInCheck(posX.king, posY, board)) {
         return false;
     }
 
@@ -188,6 +184,7 @@ King.prototype.castle = function(rook, grid) {
 
 King.prototype.checkIfInCheck = function(x, y, grid) {
     var king = this,
+        board = grid.grid,
         posX,
         posY;
 
@@ -201,28 +198,28 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
 
     // Check horizontally, x value descending
     for (var i = posX - 1; i >= grid.boundary.min; i--) {
-        if (straightLineCheck(i, posY, posX, grid)) {
+        if (straightLineCheck(i, posY, (posX - i), board)) {
             return true;
         }
     }
 
     // Check horizontally, x value ascending
     for (var i = posX + 1; i <= grid.boundary.max; i++) {
-        if (straightLineCheck(i, posY, posX, grid)) {
+        if (straightLineCheck(i, posY, (i - posX), board)) {
             return true;
         }
     }
 
     // Check verticaly, y value descending
     for (var i = posY - 1; i >= grid.boundary.min; i--) {
-        if (straightLineCheck(posX, i, posY, grid)) {
+        if (straightLineCheck(posX, i, (posY - i), board)) {
             return true;
         }
     }
 
     // Check verticaly, y value ascending
     for (var i = posY + 1; i <= grid.boundary.max; i++) {
-        if (straightLineCheck(posX, i, posY, grid)) {
+        if (straightLineCheck(posX, i, (i - posY), board)) {
             return true;
         }
     }
@@ -230,7 +227,7 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
     // Check diagonally, x and y value descending
     for (var i = posX - 1; i >= grid.boundary.min; i--) {
         for (var j = posY - 1; j >= grid.boundary.min; j--) {
-            if ((posX - i) === (posY - j) && diagonalLineCheck(i, j, (posX - i), grid)) {
+            if ((posX - i) === (posY - j) && diagonalLineCheck(i, j, (posX - i), board)) {
                 return true;
             }
         }
@@ -239,7 +236,7 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
     // Check diagonally, x ascending and y value descending
     for (var i = posX + 1; i <= grid.boundary.max; i++) {
         for (var j = posY - 1; j >= grid.boundary.min; j--) {
-            if ((i - posX) === (posY - j) && diagonalLineCheck(i, j, (i - posX), grid)) {
+            if ((i - posX) === (posY - j) && diagonalLineCheck(i, j, (i - posX), board)) {
                 return true;
             }
         }
@@ -248,7 +245,7 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
     // Check diagonally, x descending and y value ascending
     for (var i = posX - 1; i >= grid.boundary.min; i--) {
         for (var j = posY + 1; j <= grid.boundary.max; j++) {
-            if ((posX - i) === (j - posY) && diagonalLineCheck(i, j, (i - posX), grid)) {
+            if ((posX - i) === (j - posY) && diagonalLineCheck(i, j, (posX - i), board)) {
                 return true;
             }
         }
@@ -257,7 +254,7 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
     // Check diagonally, x ascending and y value ascending
     for (var i = posX + 1; i <= grid.boundary.min; i++) {
         for (var j = posY + 1; j <= grid.boundary.max; j++) {
-            if ((i - posX) === (j - posY) && diagonalLineCheck(i, j, (i - posX), grid)) {
+            if ((i - posX) === (j - posY) && diagonalLineCheck(i, j, (i - posX), board)) {
                 return true;
             }
         }
@@ -283,42 +280,44 @@ function knightCheck(x, y, grid) {
         return false;
     }
 
-    if (grid[x][y]) {
-        if (grid[x][y].white === king.white) {
+    var board = grid.grid;
+
+    if (board[x][y]) {
+        if (board[x][y].white === king.white) {
             return false;
         }
 
-        if (grid[x][y].type === 'Knight') {
+        if (board[x][y].type === 'Knight') {
             return true;
         }
     }
     return false;
 }
 
-function diagonalLineCheck(x, y, pos, grid) {
-    if (grid[x][y]) {
-        if (grid[x][y].white === king.white) {
+function diagonalLineCheck(x, y, pos, board) {
+    if (board[x][y]) {
+        if (board[x][y].white === king.white) {
             return false;
         }
 
-        if (pos - num === 1 && (grid[x][y].type === 'King' || grid[x][y].type === 'Pawn')) {
+        if (pos === 1 && (board[x][y].type === 'King' || board[x][y].type === 'Pawn')) {
             return true;
-        } else if (grid[x][y].type === 'Queen' || grid[x][y].type === 'Bishop') {
+        } else if (board[x][y].type === 'Queen' || board[x][y].type === 'Bishop') {
             return true;
         }
     }
     return false;
 }
 
-function straightLineCheck(x, y, pos, num) {
-    if (grid[x][y]) {
-        if (grid[x][y].white === king.white) {
+function straightLineCheck(x, y, pos, board) {
+    if (board[x][y]) {
+        if (board[x][y].white === king.white) {
             return false;
         }
 
-        if (pos - num === 1 && grid[x][y].type === 'King') {
+        if (pos === 1 && board[x][y].type === 'King') {
             return true;
-        } else if (grid[x][y].type === 'Queen' || grid[x][y].type === 'Rook') {
+        } else if (board[x][y].type === 'Queen' || [x][y].type === 'Rook') {
             return true;
         } else {
             return false;
