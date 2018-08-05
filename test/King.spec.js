@@ -4,7 +4,8 @@ var expect = require('chai').expect,
     chaiAsPromised = require('chai-as-promised'),
     sinon = require('sinon'),
     Grid = require('../Grid'),
-    King = require('../King');
+    King = require('../King'),
+    Rook = require('../Rook');
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -25,7 +26,10 @@ describe('King.js', function() {
     var grid,
         king,
         rookOne,
-        rookTwo;
+        rookTwo,
+        rookThree,
+        rookFour,
+        rookFive;
 
     describe('Move straight', function() {
 
@@ -190,7 +194,6 @@ describe('King.js', function() {
         });
     });
 
-
     describe('Castle works properly', function() {
         beforeEach(function() {
             king = new King(5, 1, 'King', true);
@@ -209,8 +212,47 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(5, 5, king);
         });
 
-        it('King.castle should move as it\'s supposed to', function() {
-            king
+        it('King.castle should move as it\'s supposed to - left', function() {
+            var x = king.castle(rookOne, grid);
+            expect(x).to.be.true;
+        });
+
+        it('King.castle should move as it\'s supposed to - right', function() {
+            var x = king.castle(rookTwo, grid);
+            expect(x).to.be.true;
+        });
+    });
+
+
+    describe('Castle doesn\'t work if certain conditions aren\'t met', function() {
+        beforeEach(function() {
+            king = new King(5, 1, 'King', true);
+            rookOne = new Rook(1, 1, 'Rook', true);
+            rookTwo = new Rook(8, 1, 'Rook', true);
+            rookThree = new Rook(1, 2, 'Rook', true);
+            rookFour = new Rook(8, 2, 'Rook', true);
+            rookFive = new Rook(5, 1, 'Rook', false);
+
+            // grid = initializeGrid();
+
+            // var obj = {
+            //     'white': {
+            //         'king': [king],
+            //         'rooks': [rookOne, rookTwo]
+            //     }
+            // }
+            // grid.setAllObjects(obj);
+            // grid.setStartPosOnGrid(5, 5, king);
+        });
+
+        it('King.castle should move as it\'s supposed to - left', function() {
+            var x = king.castle(rookOne, grid);
+            expect(x).to.be.true;
+        });
+
+        it('King.castle should move as it\'s supposed to - right', function() {
+            var x = king.castle(rookTwo, grid);
+            expect(x).to.be.true;
         });
     });
 });

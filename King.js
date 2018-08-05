@@ -156,15 +156,15 @@ King.prototype.castle = function(rook, grid) {
         row,
         posX;
 
-    if (oldRookPos > kingPos) {
-        row = { max: oldRookPos, min: kingPos };
+    if (oldRookPos > oldKingPos) {
+        row = { max: oldRookPos, min: oldKingPos };
         posX = { king: oldKingPos + 2, rook: oldRookPos - 2 };
     } else {
         row = { max: oldKingPos, min: oldRookPos };
         posX = { king: oldKingPos - 2, rook: oldRookPos + 3 };
     }
 
-    if (king.checkIfInCheck(posX.king, posY, board)) {
+    if (king.checkIfInCheck(posX.king, posY, grid)) {
         return false;
     }
 
