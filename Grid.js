@@ -74,7 +74,7 @@ Grid.prototype.splicePiece = function(obj) {
 }
 
 Grid.prototype.getPieceType = function(obj) {
-    console.log(obj);
+    // console.log(obj);
 
     // if (obj instanceof require('./Rook')) {
     //     return "rooks";

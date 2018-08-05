@@ -78,18 +78,17 @@ King.prototype.moveDiagonal = function(x, y, grid) {
     }
 
     var king = this,
-        board = grid.grid,
         oldX = king.position.x,
         oldY = king.position.y,
         xAbs = Math.abs(oldX - x),
         yAbs = Math.abs(oldY - y);
 
-    if (king.checkIfInCheck(x, y, board)) {
+    if (king.checkIfInCheck(x, y, grid)) {
         return false;
     }
 
-    if (moveDiagonal(x, y, oldX, oldY, xAbs, yAbs) && board[x][y]) {
-        return king.checkPiece.apply(king, [grid, oldX - 1, oldX, oldY - 1, oldY]);
+    if (moveDiagonal(x, y, oldX, oldY, xAbs, yAbs)) {
+        return king.checkPiece.apply(king, [grid, x, oldX, y, oldY]);
     }
     return false;
 };
@@ -125,8 +124,8 @@ King.prototype.checkPiece = function(grid, numX, oldNumX, numY, oldNumY) {
 
     if (king.checkIfOppositeColor.apply(king, [board, numX, numY])) {
         oldObj = board[numX][numY];
-        king.setGridDiagonal.apply(king, [grid, numX, oldNumX, numY, oldNumY]);
         grid.splicePiece(oldObj);
+        king.setGridDiagonal.apply(king, [grid, numX, oldNumX, numY, oldNumY]);
         return true;
     } else {
         return false;
@@ -198,28 +197,28 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
 
     // Check horizontally, x value descending
     for (var i = posX - 1; i >= grid.boundary.min; i--) {
-        if (straightLineCheck(i, posY, (posX - i), board)) {
+        if (straightLineCheck(i, posY, (posX - i), board, king.white)) {
             return true;
         }
     }
 
     // Check horizontally, x value ascending
     for (var i = posX + 1; i <= grid.boundary.max; i++) {
-        if (straightLineCheck(i, posY, (i - posX), board)) {
+        if (straightLineCheck(i, posY, (i - posX), board, king.white)) {
             return true;
         }
     }
 
     // Check verticaly, y value descending
     for (var i = posY - 1; i >= grid.boundary.min; i--) {
-        if (straightLineCheck(posX, i, (posY - i), board)) {
+        if (straightLineCheck(posX, i, (posY - i), board, king.white)) {
             return true;
         }
     }
 
     // Check verticaly, y value ascending
     for (var i = posY + 1; i <= grid.boundary.max; i++) {
-        if (straightLineCheck(posX, i, (i - posY), board)) {
+        if (straightLineCheck(posX, i, (i - posY), board, king.white)) {
             return true;
         }
     }
@@ -227,7 +226,7 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
     // Check diagonally, x and y value descending
     for (var i = posX - 1; i >= grid.boundary.min; i--) {
         for (var j = posY - 1; j >= grid.boundary.min; j--) {
-            if ((posX - i) === (posY - j) && diagonalLineCheck(i, j, (posX - i), board)) {
+            if ((posX - i) === (posY - j) && diagonalLineCheck(i, j, (posX - i), board, king.white)) {
                 return true;
             }
         }
@@ -236,7 +235,7 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
     // Check diagonally, x ascending and y value descending
     for (var i = posX + 1; i <= grid.boundary.max; i++) {
         for (var j = posY - 1; j >= grid.boundary.min; j--) {
-            if ((i - posX) === (posY - j) && diagonalLineCheck(i, j, (i - posX), board)) {
+            if ((i - posX) === (posY - j) && diagonalLineCheck(i, j, (i - posX), board, king.white)) {
                 return true;
             }
         }
@@ -245,7 +244,7 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
     // Check diagonally, x descending and y value ascending
     for (var i = posX - 1; i >= grid.boundary.min; i--) {
         for (var j = posY + 1; j <= grid.boundary.max; j++) {
-            if ((posX - i) === (j - posY) && diagonalLineCheck(i, j, (posX - i), board)) {
+            if ((posX - i) === (j - posY) && diagonalLineCheck(i, j, (posX - i), board, king.white)) {
                 return true;
             }
         }
@@ -254,28 +253,28 @@ King.prototype.checkIfInCheck = function(x, y, grid) {
     // Check diagonally, x ascending and y value ascending
     for (var i = posX + 1; i <= grid.boundary.min; i++) {
         for (var j = posY + 1; j <= grid.boundary.max; j++) {
-            if ((i - posX) === (j - posY) && diagonalLineCheck(i, j, (i - posX), board)) {
+            if ((i - posX) === (j - posY) && diagonalLineCheck(i, j, (i - posX), board, king.white)) {
                 return true;
             }
         }
     }
 
     // Check for a knight
-    if (allKnightChecks(posX, posY, grid)) {
+    if (allKnightChecks(posX, posY, grid, king.white)) {
         return true;
     }
 
     return false;
 }
 
-function allKnightChecks(x, y, grid) {
-    return (knightCheck(x - 2, y - 1, grid) || knightCheck(x + 2, y - 1, grid) ||
-        knightCheck(x - 2, y + 1, grid) || knightCheck(x + 2, y + 1, grid) ||
-        knightCheck(x - 1, y - 2, grid) || knightCheck(x + 1, y - 2, grid) ||
-        knightCheck(x - 1, y + 2, grid) || knightCheck(x + 1, y + 2, grid));
+function allKnightChecks(x, y, grid, white) {
+    return (knightCheck(x - 2, y - 1, grid, white) || knightCheck(x + 2, y - 1, grid, white) ||
+        knightCheck(x - 2, y + 1, grid, white) || knightCheck(x + 2, y + 1, grid, white) ||
+        knightCheck(x - 1, y - 2, grid, white) || knightCheck(x + 1, y - 2, grid, white) ||
+        knightCheck(x - 1, y + 2, grid, white) || knightCheck(x + 1, y + 2, grid, white));
 }
 
-function knightCheck(x, y, grid) {
+function knightCheck(x, y, grid, white) {
     if (!grid.boundaryCheck(x, y)) {
         return false;
     }
@@ -283,7 +282,7 @@ function knightCheck(x, y, grid) {
     var board = grid.grid;
 
     if (board[x][y]) {
-        if (board[x][y].white === king.white) {
+        if (board[x][y].white === white) {
             return false;
         }
 
@@ -294,9 +293,9 @@ function knightCheck(x, y, grid) {
     return false;
 }
 
-function diagonalLineCheck(x, y, pos, board) {
+function diagonalLineCheck(x, y, pos, board, white) {
     if (board[x][y]) {
-        if (board[x][y].white === king.white) {
+        if (board[x][y].white === white) {
             return false;
         }
 
@@ -309,9 +308,9 @@ function diagonalLineCheck(x, y, pos, board) {
     return false;
 }
 
-function straightLineCheck(x, y, pos, board) {
+function straightLineCheck(x, y, pos, board, white) {
     if (board[x][y]) {
-        if (board[x][y].white === king.white) {
+        if (board[x][y].white === white) {
             return false;
         }
 
