@@ -168,8 +168,10 @@ King.prototype.castle = function(rook, grid) {
         posX = { king: oldKingPos - 2, rook: oldRookPos + 3 };
     }
 
-    if (king.checkIfInCheck(posX.king, posY, grid)) {
-        return false;
+    for (var i = row.min; i < row.max; i++) {
+        if (king.checkIfInCheck(i, posY, grid)) {
+            return false;
+        }
     }
 
     for (var i = row.min + 1; i < row.max; i++) {
