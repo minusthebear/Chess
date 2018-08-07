@@ -156,6 +156,10 @@ King.prototype.castle = function(rook, grid) {
         row,
         posX;
 
+    if (posY !== rook.position.y) {
+        return false;
+    }
+
     if (oldRookPos > oldKingPos) {
         row = { max: oldRookPos, min: oldKingPos };
         posX = { king: oldKingPos + 2, rook: oldRookPos - 2 };
