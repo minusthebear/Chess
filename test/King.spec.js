@@ -6,7 +6,10 @@ var expect = require('chai').expect,
     Grid = require('../Grid'),
     King = require('../King'),
     Rook = require('../Rook'),
-    Queen = require('../Queen');
+    Queen = require('../Queen'),
+    Bishop = require('../Bishop'),
+    Pawn = require('../Pawn'),
+    Knight = require('../Knight');
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -23,6 +26,58 @@ function initializeGrid() {
     return grid;
 }
 
+function moveDiagonalFalseCheck(king, x, y, grid) {
+    var origX = king.position.x,
+        origY = king.position.y,
+        test = king.moveDiagonal(x, y, grid);
+
+    expect(test).to.be.false;
+    expect(king.position.x).to.equal(origX);
+    expect(king.position.y).to.equal(origY);
+}
+
+function moveDiagonalTrueCheck(king, x, y, grid) {
+    var test = king.moveDiagonal(x, y, grid);
+
+    expect(test).to.be.true;
+    expect(king.position.x).to.equal(x);
+    expect(king.position.y).to.equal(y);
+}
+
+
+function moveStraightFalseCheck(king, x, y, grid) {
+    var origX = king.position.x,
+        origY = king.position.y,
+        test = king.moveStraight(x, y, grid);
+
+    expect(test).to.be.false;
+    expect(king.position.x).to.equal(origX);
+    expect(king.position.y).to.equal(origY);
+}
+
+function moveStraightTrueCheck(king, x, y, grid) {
+    var test = king.moveStraight(x, y, grid);
+
+    expect(test).to.be.true;
+    expect(king.position.x).to.equal(x);
+    expect(king.position.y).to.equal(y);
+}
+
+function trueCastleCheck(king, rook, grid, x1, x2) {
+    var x = king.castle(rook, grid);
+    expect(x).to.be.true;
+    expect(king.position.x).to.equal(x1);
+    expect(rook.position.x).to.equal(x2)
+}
+
+function falseCastleCheck(king, rook, grid, x2) {
+    var x = king.castle(rook, grid);
+    expect(x).to.be.false;
+    expect(king.position.x).to.equal(5);
+    expect(rook.position.x).to.equal(x2);
+}
+
+
 describe('King.js', function() {
     var grid,
         king,
@@ -32,7 +87,10 @@ describe('King.js', function() {
         rookFour,
         rookFive,
         queenOne,
-        queenTwo;
+        queenTwo,
+        bishopOne,
+        knightOne,
+        pawnOne;
 
     describe('Move straight', function() {
 
@@ -56,78 +114,28 @@ describe('King.js', function() {
         });
 
         it('King.moveStraight should not move in anything but a straight line', function() {
-            var testOne = king.moveStraight(6, 3, grid);
-            expect(testOne).to.be.false;
-            expect(king.position.x).to.equal(5);
-            expect(king.position.y).to.equal(1);
-
-            var testTwo = king.moveStraight(4, 2, grid);
-            expect(testTwo).to.be.false;
-            expect(king.position.x).to.equal(5);
-            expect(king.position.y).to.equal(1);
-
-            var testThree = king.moveStraight(5, 2, grid);
-            expect(testThree).to.be.true;
-            expect(king.position.x).to.equal(5);
-            expect(king.position.y).to.equal(2);
+            moveStraightFalseCheck(king, 6, 3, grid);
+            moveStraightFalseCheck(king, 4, 2, grid);
+            moveStraightTrueCheck(king, 5, 2, grid);
         });
 
         it('King.moveStraight should not move more than one space', function() {
-            var testOne = king.moveStraight(1, 1, grid);
-            expect(testOne).to.be.false;
-            expect(king.position.x).to.equal(5);
-            expect(king.position.y).to.equal(1);
-
-            var testTwo = king.moveStraight(8, 1, grid);
-            expect(testTwo).to.be.false;
-            expect(king.position.x).to.equal(5);
-            expect(king.position.y).to.equal(1);
-
-            var testThree = king.moveStraight(5, 8, grid);
-            expect(testThree).to.be.false;
-            expect(king.position.x).to.equal(5);
-            expect(king.position.y).to.equal(1);
-
-            var testFour = king.moveStraight(5, 3, grid);
-            expect(testFour).to.be.false;
-            expect(king.position.x).to.equal(5);
-            expect(king.position.y).to.equal(1);
+            moveStraightFalseCheck(king, 1, 1, grid);
+            moveStraightFalseCheck(king, 8, 1, grid);
+            moveStraightFalseCheck(king, 5, 8, grid);
+            moveStraightFalseCheck(king, 5, 3, grid);
         });
 
         it('King.moveStraight should move only one space horizontally', function() {
-            var testThree = king.moveStraight(6, 1, grid);
-            expect(testThree).to.be.true;
-            expect(king.position.x).to.equal(6);
-            expect(king.position.y).to.equal(1);
+            moveStraightTrueCheck(king, 6, 1, grid);
         });
 
         it('King.moveStraight should move only one space vertically', function() {
-            var testThree = king.moveStraight(5, 2, grid);
-            expect(testThree).to.be.true;
-            expect(king.position.x).to.equal(5);
-            expect(king.position.y).to.equal(2);
+            moveStraightTrueCheck(king, 5, 2, grid);
         });
     });
 
     describe('Move diagonal', function() {
-
-        function falseCheck(king, x, y, grid) {
-            var origX = 5,
-                origY = 5,
-                test = king.moveDiagonal(x, y, grid);
-
-            expect(test).to.be.false;
-            expect(king.position.x).to.equal(origX);
-            expect(king.position.y).to.equal(origY);
-        }
-
-        function trueCheck(king, x, y, grid) {
-            var test = king.moveDiagonal(x, y, grid);
-
-            expect(test).to.be.true;
-            expect(king.position.x).to.equal(x);
-            expect(king.position.y).to.equal(y);
-        }
 
         beforeEach(function() {
             king = new King(5, 5, 'King', true);
@@ -144,32 +152,32 @@ describe('King.js', function() {
         });
 
         it('King.moveDiagonal should not move in anything but a diagonal line', function() {
-            falseCheck(king, 6, 5, grid);
-            falseCheck(king, 5, 4, grid);
-            falseCheck(king, 7, 2, grid);
+            moveDiagonalFalseCheck(king, 6, 5, grid);
+            moveDiagonalFalseCheck(king, 5, 4, grid);
+            moveDiagonalFalseCheck(king, 7, 2, grid);
         });
 
         it('King.moveDiagonal should not move more than one space', function() {
-            falseCheck(king, 7, 7, grid);
-            falseCheck(king, 3, 3, grid);
-            falseCheck(king, 7, 3, grid);
-            falseCheck(king, 3, 7, grid);
+            moveDiagonalFalseCheck(king, 7, 7, grid);
+            moveDiagonalFalseCheck(king, 3, 3, grid);
+            moveDiagonalFalseCheck(king, 7, 3, grid);
+            moveDiagonalFalseCheck(king, 3, 7, grid);
         });
 
         it('King.moveDiagonal should move one space', function() {
-            trueCheck(king, 6, 6, grid);
+            moveDiagonalTrueCheck(king, 6, 6, grid);
         });
 
         it('King.moveDiagonal should move one space', function() {
-            trueCheck(king, 4, 4, grid);
+            moveDiagonalTrueCheck(king, 4, 4, grid);
         });
 
         it('King.moveDiagonal should move one space', function() {
-            trueCheck(king, 4, 6, grid);
+            moveDiagonalTrueCheck(king, 4, 6, grid);
         });
 
         it('King.moveDiagonal should move one space', function() {
-            trueCheck(king, 6, 4, grid);
+            moveDiagonalTrueCheck(king, 6, 4, grid);
         });
     });
 
@@ -228,8 +236,7 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(5, 1, king);
             grid.setStartPosOnGrid(1, 1, rookOne);
 
-            var x = king.castle(rookOne, grid);
-            expect(x).to.be.true;
+            trueCastleCheck(king, rookOne, grid, 3, 4);
         });
 
         it('King.castle should move as it\'s supposed to - right', function() {
@@ -245,8 +252,7 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(5, 1, king);
             grid.setStartPosOnGrid(8, 1, rookTwo);
 
-            var x = king.castle(rookTwo, grid);
-            expect(x).to.be.true;
+            trueCastleCheck(king, rookTwo, grid, 7, 6);
         });
 
         it('King.castle - king should not move if it\'s touched', function() {
@@ -264,8 +270,7 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(5, 1, king);
             grid.setStartPosOnGrid(8, 1, rookTwo);
 
-            var x = king.castle(rookTwo, grid);
-            expect(x).to.be.false;
+            falseCastleCheck(king, rookTwo, grid, 8);
         });
 
         it('King.castle - rook should not move if it\'s touched', function() {
@@ -283,8 +288,7 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(5, 1, king);
             grid.setStartPosOnGrid(8, 1, rookTwo);
 
-            var x = king.castle(rookTwo, grid);
-            expect(x).to.be.false;
+            falseCastleCheck(king, rookTwo, grid, 8);
         });
 
         it('King.castle - king cannot castle unless same position on x-axis - left', function() {
@@ -301,8 +305,7 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(5, 1, king);
             grid.setStartPosOnGrid(1, 2, rookThree);
 
-            var x = king.castle(rookThree, grid);
-            expect(x).to.be.false;
+            falseCastleCheck(king, rookThree, grid, 1);
         });
 
         it('King.castle - king cannot castle unless same position on x-axis - right', function() {
@@ -319,8 +322,7 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(5, 1, king);
             grid.setStartPosOnGrid(8, 2, rookFour);
 
-            var x = king.castle(rookFour, grid);
-            expect(x).to.be.false;
+            falseCastleCheck(king, rookFour, grid, 8);
         });
 
         it('King.castle - king cannot castle with rook of different color', function() {
@@ -337,8 +339,7 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(5, 1, king);
             grid.setStartPosOnGrid(8, 1, rookFive);
 
-            var x = king.castle(rookFive, grid);
-            expect(x).to.be.false;
+            falseCastleCheck(king, rookFive, grid, 8);
         });
 
         it('King.castle - king cannot castle if it passes through check - left', function() {
@@ -359,8 +360,7 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(1, 1, rookOne);
             grid.setStartPosOnGrid(4, 8, queenOne);
 
-            var x = king.castle(rookOne, grid);
-            expect(x).to.be.false;
+            falseCastleCheck(king, rookOne, grid, 1);
         });
 
         it('King.castle - king cannot castle if it passes through check - right', function() {
@@ -381,8 +381,144 @@ describe('King.js', function() {
             grid.setStartPosOnGrid(8, 1, rookTwo);
             grid.setStartPosOnGrid(6, 8, queenTwo);
 
-            var x = king.castle(rookTwo, grid);
-            expect(x).to.be.false;
+            falseCastleCheck(king, rookTwo, grid, 8);
+        });
+    });
+
+    describe('checkIfInCheck should work properly', function() {
+        beforeEach(function() {
+            king = new King(5, 1, 'King', true);
+            rookTwo = new Rook(8, 1, 'Rook', false);
+            rookThree = new Rook(5, 3, 'Rook', false);
+            rookFour = new Rook(3, 2, 'Rook', true);
+            rookFive = new Rook(8, 1, 'Rook', false);
+            queenTwo = new Queen(6, 8, 'Queen', false);
+
+            grid = initializeGrid();
+        });
+
+        it('Rook of own color should not put in check', function() {
+            rookOne = new Rook(1, 2, 'Rook', true);
+
+            var obj = {
+                'white': {
+                    'king': [king],
+                    'rooks': [rookOne]
+                }
+            }
+            grid.setAllObjects(obj);
+            grid.setStartPosOnGrid(5, 1, king);
+            grid.setStartPosOnGrid(1, 2, rookOne);
+
+            moveStraightTrueCheck(king, 5, 2, grid);
+        });
+
+        it('King cannot move into check - rook', function() {
+            rookOne = new Rook(1, 2, 'Rook', false);
+
+            var obj = {
+                'white': {
+                    'king': [king]
+                },
+                'black': {
+                    'rooks': [rookOne]
+                }
+            }
+            grid.setAllObjects(obj);
+            grid.setStartPosOnGrid(5, 1, king);
+            grid.setStartPosOnGrid(1, 2, rookOne);
+
+            moveStraightFalseCheck(king, 5, 1, grid);
+        });
+
+        it('King cannot move into check - queen', function() {
+            queenOne = new Queen(1, 2, 'Queen', false);
+
+            var obj = {
+                'white': {
+                    'king': [king]
+                },
+                'black': {
+                    'queens': [queenOne]
+                }
+            }
+            grid.setAllObjects(obj);
+            grid.setStartPosOnGrid(5, 1, king);
+            grid.setStartPosOnGrid(1, 2, queenOne);
+
+            moveStraightFalseCheck(king, 5, 1, grid);
+        });
+
+        it('King cannot move into check - bishop', function() {
+            bishopOne = new Bishop(7, 4, 'Bishop', false);
+
+            var obj = {
+                'white': {
+                    'king': [king]
+                },
+                'black': {
+                    'bishops': [bishopOne]
+                }
+            }
+            grid.setAllObjects(obj);
+            grid.setStartPosOnGrid(5, 1, king);
+            grid.setStartPosOnGrid(1, 2, queenOne);
+
+            moveStraightFalseCheck(king, 5, 1, grid);
+        });
+
+        it('King cannot move into check - bishop', function() {
+            bishopOne = new Bishop(7, 4, 'Bishop', false);
+
+            var obj = {
+                'white': {
+                    'king': [king]
+                },
+                'black': {
+                    'bishops': [bishopOne]
+                }
+            }
+            grid.setAllObjects(obj);
+            grid.setStartPosOnGrid(5, 1, king);
+            grid.setStartPosOnGrid(1, 2, queenOne);
+
+            moveStraightFalseCheck(king, 5, 1, grid);
+        });
+
+        it('King cannot move into check - knight', function() {
+            knightOne = new Knight(3, 3, 'Knight', false);
+
+            var obj = {
+                'white': {
+                    'king': [king]
+                },
+                'black': {
+                    'knights': [knightOne]
+                }
+            }
+            grid.setAllObjects(obj);
+            grid.setStartPosOnGrid(5, 1, king);
+            grid.setStartPosOnGrid(3, 3, knightOne);
+
+            moveStraightFalseCheck(king, 5, 1, grid);
+        });
+
+        it('King cannot move into check - pawn', function() {
+            pawnOne = new Pawn(4, 3, 'Pawn', false);
+
+            var obj = {
+                'white': {
+                    'king': [king]
+                },
+                'black': {
+                    'pawns': [pawnOne]
+                }
+            }
+            grid.setAllObjects(obj);
+            grid.setStartPosOnGrid(5, 1, king);
+            grid.setStartPosOnGrid(4, 3, pawnOne);
+
+            moveStraightFalseCheck(king, 5, 1, grid);
         });
     });
 });

@@ -174,6 +174,7 @@ King.prototype.castle = function(rook, grid) {
         }
     }
 
+    // Check chess rules to see if values for min and max are correct
     for (var i = row.min + 1; i < row.max; i++) {
         if (board[i][posY]) {
             return false;
@@ -322,7 +323,7 @@ function straightLineCheck(x, y, pos, board, white) {
 
         if (pos === 1 && board[x][y].type === 'King') {
             return true;
-        } else if (board[x][y].type === 'Queen' || [x][y].type === 'Rook') {
+        } else if (board[x][y].type === 'Queen' || board[x][y].type === 'Rook') {
             return true;
         } else {
             return false;
