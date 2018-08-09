@@ -77,6 +77,29 @@ function falseCastleCheck(king, rook, grid, x2) {
     expect(rook.position.x).to.equal(x2);
 }
 
+function setGridFunc(king, grid, p1, p1Type, p1x, p1y, p2, p2Type, p2x, p2y) {
+    var obj = {
+        'white': {
+            'king': [king]
+        },
+        'black': {}
+    }
+
+    grid.setStartPosOnGrid(5, 1, king);
+
+    if (p1) {
+        obj.white[p1Type] = [p1];
+        grid.setStartPosOnGrid(p1x, p1y, p1);
+    }
+    if (p2) {
+        obj.black[p2Type] = [p2];
+        grid.setStartPosOnGrid(p2x, p2y, p2);
+    }
+    grid.setAllObjects(obj);
+
+    return grid;
+}
+
 
 describe('King.js', function() {
     var grid,
@@ -400,33 +423,22 @@ describe('King.js', function() {
         it('Rook of own color should not put in check', function() {
             rookOne = new Rook(1, 2, 'Rook', true);
 
-            var obj = {
-                'white': {
-                    'king': [king],
-                    'rooks': [rookOne]
-                }
-            }
-            grid.setAllObjects(obj);
-            grid.setStartPosOnGrid(5, 1, king);
-            grid.setStartPosOnGrid(1, 2, rookOne);
+            grid = setGridFunc(king, grid,
+                rookOne, 'rooks', 1, 2,
+                false, false, false, false);
 
             moveStraightTrueCheck(king, 5, 2, grid);
         });
 
         it('King cannot move into check - rook', function() {
+
+
             rookOne = new Rook(1, 2, 'Rook', false);
 
-            var obj = {
-                'white': {
-                    'king': [king]
-                },
-                'black': {
-                    'rooks': [rookOne]
-                }
-            }
-            grid.setAllObjects(obj);
-            grid.setStartPosOnGrid(5, 1, king);
-            grid.setStartPosOnGrid(1, 2, rookOne);
+            grid = setGridFunc(king, grid,
+                false, false, false, false,
+                rookOne, 'rooks', 1, 2);
+
 
             moveStraightFalseCheck(king, 5, 1, grid);
         });
@@ -434,17 +446,9 @@ describe('King.js', function() {
         it('King cannot move into check - queen', function() {
             queenOne = new Queen(1, 2, 'Queen', false);
 
-            var obj = {
-                'white': {
-                    'king': [king]
-                },
-                'black': {
-                    'queens': [queenOne]
-                }
-            }
-            grid.setAllObjects(obj);
-            grid.setStartPosOnGrid(5, 1, king);
-            grid.setStartPosOnGrid(1, 2, queenOne);
+            grid = setGridFunc(king, grid,
+                false, false, false, false,
+                queenOne, 'queens', 1, 2);
 
             moveStraightFalseCheck(king, 5, 1, grid);
         });
@@ -452,35 +456,9 @@ describe('King.js', function() {
         it('King cannot move into check - bishop', function() {
             bishopOne = new Bishop(7, 4, 'Bishop', false);
 
-            var obj = {
-                'white': {
-                    'king': [king]
-                },
-                'black': {
-                    'bishops': [bishopOne]
-                }
-            }
-            grid.setAllObjects(obj);
-            grid.setStartPosOnGrid(5, 1, king);
-            grid.setStartPosOnGrid(1, 2, queenOne);
-
-            moveStraightFalseCheck(king, 5, 1, grid);
-        });
-
-        it('King cannot move into check - bishop', function() {
-            bishopOne = new Bishop(7, 4, 'Bishop', false);
-
-            var obj = {
-                'white': {
-                    'king': [king]
-                },
-                'black': {
-                    'bishops': [bishopOne]
-                }
-            }
-            grid.setAllObjects(obj);
-            grid.setStartPosOnGrid(5, 1, king);
-            grid.setStartPosOnGrid(1, 2, queenOne);
+            grid = setGridFunc(king, grid,
+                false, false, false, false,
+                bishopOne, 'bishops', 7, 4);
 
             moveStraightFalseCheck(king, 5, 1, grid);
         });
@@ -488,17 +466,9 @@ describe('King.js', function() {
         it('King cannot move into check - knight', function() {
             knightOne = new Knight(3, 3, 'Knight', false);
 
-            var obj = {
-                'white': {
-                    'king': [king]
-                },
-                'black': {
-                    'knights': [knightOne]
-                }
-            }
-            grid.setAllObjects(obj);
-            grid.setStartPosOnGrid(5, 1, king);
-            grid.setStartPosOnGrid(3, 3, knightOne);
+            grid = setGridFunc(king, grid,
+                false, false, false, false,
+                knightOne, 'knights', 3, 3);
 
             moveStraightFalseCheck(king, 5, 1, grid);
         });
@@ -506,17 +476,9 @@ describe('King.js', function() {
         it('King cannot move into check - pawn', function() {
             pawnOne = new Pawn(4, 3, 'Pawn', false);
 
-            var obj = {
-                'white': {
-                    'king': [king]
-                },
-                'black': {
-                    'pawns': [pawnOne]
-                }
-            }
-            grid.setAllObjects(obj);
-            grid.setStartPosOnGrid(5, 1, king);
-            grid.setStartPosOnGrid(4, 3, pawnOne);
+            grid = setGridFunc(king, grid,
+                false, false, false, false,
+                pawnOne, 'pawns', 4, 3);
 
             moveStraightFalseCheck(king, 5, 1, grid);
         });
