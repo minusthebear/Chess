@@ -432,13 +432,11 @@ describe('King.js', function() {
 
         it('King cannot move into check - rook', function() {
 
-
             rookOne = new Rook(1, 2, 'Rook', false);
 
             grid = setGridFunc(king, grid,
                 false, false, false, false,
                 rookOne, 'rooks', 1, 2);
-
 
             moveStraightFalseCheck(king, 5, 1, grid);
         });

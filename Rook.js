@@ -26,14 +26,14 @@ Rook.prototype.move = function(x, y, grid) {
     }
 
     if (oldX === x && oldY > y) {
-        for (var i = oldY - 1; i >= y; i--) {
+        for (var i = oldY - 1; i > y; i--) {
             if (board[x][i]) {
 
                 var oldObj;
 
                 if (this.checkIfOppositeColor(board, x, i)) {
                     oldObj = board[x][i];
-                    this.setGrid(grid, x, null, i, oldY);
+                    this.setGrid(grid, x, oldX, i, oldY);
                     this.unTouched = false;
                     grid.splicePiece(oldObj);
                     return true;
@@ -42,20 +42,20 @@ Rook.prototype.move = function(x, y, grid) {
                 }
             }
         }
-        this.setGrid(grid, x, null, y, oldY);
+        this.setGrid(grid, x, oldX, y, oldY);
         this.unTouched = false;
         return true;
     }
 
     if (oldX === x && oldY < y) {
-        for (var i = oldY + 1; i <= y; i++) {
+        for (var i = oldY + 1; i < y; i++) {
             if (board[x][i]) {
 
                 var oldObj;
 
                 if (this.checkIfOppositeColor(board, x, i)) {
                     var oldObj = board[x][i];
-                    this.setGrid(grid, x, null, i, oldY);
+                    this.setGrid(grid, x, oldX, i, oldY);
                     this.unTouched = false;
                     grid.splicePiece(oldObj);
                     return true;
@@ -64,20 +64,20 @@ Rook.prototype.move = function(x, y, grid) {
                 }
             }
         }
-        this.setGrid(grid, x, null, y, oldY);
+        this.setGrid(grid, x, oldX, y, oldY);
         this.unTouched = false;
         return true;
     }
 
     if (oldY === y && oldX > x) {
-        for (var i = oldX - 1; i >= x; i--) {
+        for (var i = oldX - 1; i > x; i--) {
             if (board[i][y]) {
 
                 var oldObj;
 
                 if (this.checkIfOppositeColor(board, i, y)) {
                     var oldObj = board[i][y];
-                    this.setGrid(grid, i, oldX, y, null);
+                    this.setGrid(grid, i, oldX, y, oldY);
                     this.unTouched = false;
                     grid.splicePiece(oldObj);
                     return true;
@@ -86,7 +86,7 @@ Rook.prototype.move = function(x, y, grid) {
                 }
             }
         }
-        this.setGrid(grid, x, oldX, y, null);
+        this.setGrid(grid, x, oldX, y, oldY);
         this.unTouched = false;
         return true;
     }
@@ -99,7 +99,7 @@ Rook.prototype.move = function(x, y, grid) {
 
                 if (this.checkIfOppositeColor(board, i, y)) {
                     var oldObj = board[i][y];
-                    this.setGrid(grid, i, oldX, y, null);
+                    this.setGrid(grid, i, oldX, y, oldY);
                     grid.splicePiece(oldObj);
                     this.unTouched = false;
                     return true;
@@ -107,21 +107,24 @@ Rook.prototype.move = function(x, y, grid) {
                     return false;
                 }
             }
+            if (grid.boundaryCheck(i)) {
+                this.setGrid(grid, i, oldX, y, oldY);
+                this.unTouched = false;
+                return true;
+            }
         }
-        this.setGrid(grid, i, oldX, y, null);
-        this.unTouched = false;
-        return true;
     }
 }
 
 Rook.prototype.setGrid = function(grid, x, oldX, y, oldY) {
 
-    if (!x && !y && (!oldX && !oldY)) {
+    if (!x || !y || !oldX || !oldY) {
         return false;
     }
 
     this.setPosition(x, y);
     grid.setPiece(x, y, oldX, oldY, this);
+    return true;
 }
 
 module.exports = Rook;
