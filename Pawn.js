@@ -13,7 +13,7 @@ var Pawn = function(x, y, type, color) {
 
 Pawn.prototype = Object.create(Piece.prototype);
 
-Pawn.prototype.moveForward = function(y, grid) {
+Pawn.prototype.moveForward = function(x, y, grid) {
 
     if (!grid.boundaryCheck(x, y)) {
         return false;
@@ -21,10 +21,15 @@ Pawn.prototype.moveForward = function(y, grid) {
 
     var piece = this,
         positionX = piece.position.x,
-        oldY = piece.position.y;
+        oldY = piece.position.y,
+        diff = Math.abs(oldY - y);
 
-    if (piece.untouched && piece.firstMove) {
-        if (y < 1 && y >= 3) {
+    if (positionX !== x) {
+        return false;
+    }
+
+    if (piece.untouched) {
+        if (diff < 1 && diff >= 3) {
             return false;
         }
     }
@@ -34,17 +39,18 @@ Pawn.prototype.moveForward = function(y, grid) {
     }
 
     if (piece.white) {
-        piece.position.y -= y;
+        piece.position.y -= diff;
     } else {
-        piece.position.y += y;
+        piece.position.y += diff;
     }
 
     // Make so doesn't move if another player is in front.
 
-    grid[positionX][oldY] = null;
-    grid[positionX][piece.position.y] = piece;
+    grid.grid[positionX][oldY] = null;
+    grid.grid[positionX][piece.position.y] = piece;
 
     piece.untouched = false;
+    return true;
 };
 
 Pawn.prototype.passing = function(x, y, grid) {
