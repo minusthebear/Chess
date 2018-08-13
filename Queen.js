@@ -108,7 +108,7 @@ Queen.prototype.moveStraight = function(x, y, grid) {
                 }
             }
         }
-        this.setGridStraight(grid, i, oldX, y, oldY);
+        this.setGridStraight(grid, x, oldX, y, oldY);
         this.unTouched = false;
         return true;
     }
@@ -125,6 +125,7 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
         oldY = this.position.y,
         color = this.color;
 
+
     if (oldY === y || oldX === x) {
         return false;
     }
@@ -139,9 +140,12 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX - i][oldY - i]) {
-                return this.checkPiece.apply(this, [grid, oldX - 1, oldX, oldY - 1, oldY]);
+                this.checkPiece.apply(this, [grid, oldX - 1, oldX, oldY - 1, oldY]);
+                return true;
             }
         }
+        this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
+        return true;
     }
 
     if (oldX > x && oldY < y) {
@@ -154,9 +158,12 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX - i][oldY + i]) {
-                return this.checkPiece.apply(this, [grid, oldX - 1, oldX, oldY + i, oldY]);
+                this.checkPiece.apply(this, [grid, oldX - 1, oldX, oldY + i, oldY]);
+                return true;
             }
         }
+        this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
+        return true;
     }
 
     if (oldX < x && oldY > y) {
@@ -169,9 +176,12 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX + i][oldY - i]) {
-                return this.checkPiece.apply(this, [grid, oldX + 1, oldX, oldY + i, oldY]);
+                this.checkPiece.apply(this, [grid, oldX + 1, oldX, oldY + i, oldY]);
+                return true;
             }
         }
+        this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
+        return true;
     }
 
     if (oldX < x && oldY < y) {
@@ -182,35 +192,44 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
             return false;
         }
 
-
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX - i][oldY - i]) {
-                return this.checkPiece.apply(this, [grid, oldX + 1, oldX, oldY + i, oldY]);
+                this.checkPiece.apply(this, [grid, oldX + 1, oldX, oldY + i, oldY]);
+                return true;
             }
         }
+        this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
+        return true;
     }
+    return false;
 };
 
 Queen.prototype.setGridStraight = function(grid, x, oldX, y, oldY) {
 
-    if (!x && !y && ((!oldX && !oldY) || (oldY && oldX))) {
+    if (!x || !y || !oldX || !oldY) {
         return false;
     }
 
-    this.setPosition(x, y);
-    grid.setPiece(x, y, oldX, oldY, this);
+    if ((oldX === x && oldY !== y) || (oldX !== x && oldY === y)) {
+        this.setPosition(x, y);
+        grid.setPiece(x, y, oldX, oldY, this);
+        return true;
+    }
+    return false;
 };
 
 Queen.prototype.setGridDiagonal = function(grid, x, oldX, y, oldY) {
 
-    if (!x && !y && !oldX && !oldY) {
+    if (!x || !y || !oldX || !oldY) {
         return false;
     }
 
     if (oldX !== x && oldY !== y) {
         this.setPosition(x, y);
         grid.setPiece(x, y, oldX, oldY, this);
+        return true;
     }
+    return false;
 };
 
 Queen.prototype.checkPiece = function(grid, numX, oldNumX, numY, oldNumY) {

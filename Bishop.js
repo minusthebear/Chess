@@ -38,8 +38,8 @@ Bishop.prototype.move = function(x, y, grid) {
                 return piece.checkPiece.apply(piece, [grid, oldX - 1, oldX, oldY - 1, oldY]);
             }
         }
-
-        setPosition(x, y);
+        setPosition.call(piece, x, y);
+        return true;
     }
 
     if (oldX > x && oldY < y) {
@@ -55,8 +55,8 @@ Bishop.prototype.move = function(x, y, grid) {
                 return piece.checkPiece.apply(piece, [grid, oldX - 1, oldX, oldY + i, oldY]);
             }
         }
-
-        setPosition(x, y);
+        setPosition.call(piece, x, y);
+        return true;
     }
 
     if (oldX < x && oldY > y) {
@@ -72,8 +72,8 @@ Bishop.prototype.move = function(x, y, grid) {
                 return piece.checkPiece.apply(piece, [grid, oldX + 1, oldX, oldY + i, oldY]);
             }
         }
-
-        setPosition(x, y);
+        setPosition.call(piece, x, y);
+        return true;
     }
 
     if (oldX < x && oldY < y) {
@@ -90,14 +90,15 @@ Bishop.prototype.move = function(x, y, grid) {
                 return piece.checkPiece.apply(piece, [grid, oldX + 1, oldX, oldY + i, oldY]);
             }
         }
-
-        setPosition(x, y);
+        setPosition.call(piece, x, y);
+        return true;
     }
+    return false;
+}
 
-    function setPosition(x, y) {
-        this.position.x = x;
-        this.position.y = y;
-    }
+function setPosition(x, y) {
+    this.position.x = x;
+    this.position.y = y;
 }
 
 Bishop.prototype.checkPiece = function(grid, numX, oldNumX, numY, oldNumY) {

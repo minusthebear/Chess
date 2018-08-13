@@ -107,11 +107,9 @@ Rook.prototype.move = function(x, y, grid) {
                     return false;
                 }
             }
-            if (grid.boundaryCheck(i)) {
-                this.setGrid(grid, i, oldX, y, oldY);
-                this.unTouched = false;
-                return true;
-            }
+            this.setGrid(grid, x, oldX, y, oldY);
+            this.unTouched = false;
+            return true;
         }
     }
 }

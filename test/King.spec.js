@@ -44,7 +44,6 @@ function moveDiagonalTrueCheck(king, x, y, grid) {
     expect(king.position.y).to.equal(y);
 }
 
-
 function moveStraightFalseCheck(king, x, y, grid) {
     var origX = king.position.x,
         origY = king.position.y,

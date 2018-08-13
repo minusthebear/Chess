@@ -4,12 +4,7 @@ var expect = require('chai').expect,
     chaiAsPromised = require('chai-as-promised'),
     sinon = require('sinon'),
     Grid = require('../Grid'),
-    King = require('../King'),
-    Rook = require('../Rook'),
-    Queen = require('../Queen'),
-    Bishop = require('../Bishop'),
-    Pawn = require('../Pawn'),
-    Knight = require('../Knight');
+    Rook = require('../Rook');
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -72,59 +67,56 @@ describe('Rook.js', function() {
     var grid,
         rook;
 
-    describe('Move straight', function() {
+    beforeEach(function() {
 
-        beforeEach(function() {
+        grid = initializeGrid();
 
-            grid = initializeGrid();
-
-            rook = new Rook(4, 5, 'Rook', true);
-            var obj = {
-                'white': {
-                    'rooks': [rook]
-                }
+        rook = new Rook(4, 5, 'Rook', true);
+        var obj = {
+            'white': {
+                'rooks': [rook]
             }
-            grid.setAllObjects(obj);
-            grid.setStartPosOnGrid(4, 5, rook);
-        });
+        }
+        grid.setAllObjects(obj);
+        grid.setStartPosOnGrid(4, 5, rook);
+    });
 
-        it('Rook should have correct default values', function() {
-            expect(rook.type).to.equal('Rook');
-            expect(rook.white).to.be.true;
-            expect(rook.untouched).to.be.true;
-        });
+    it('Rook should have correct default values', function() {
+        expect(rook.type).to.equal('Rook');
+        expect(rook.white).to.be.true;
+        expect(rook.untouched).to.be.true;
+    });
 
-        it('Rook.moveStraight should not move in anything but a straight line', function() {
-            moveStraightFalseCheck(rook, 5, 6, grid);
-            moveStraightFalseCheck(rook, 6, 6, grid);
-            moveStraightFalseCheck(rook, 3, 4, grid);
-            moveStraightFalseCheck(rook, 2, 4, grid);
-        });
+    it('Rook.moveStraight should not move in anything but a straight line', function() {
+        moveStraightFalseCheck(rook, 5, 6, grid);
+        moveStraightFalseCheck(rook, 6, 6, grid);
+        moveStraightFalseCheck(rook, 3, 4, grid);
+        moveStraightFalseCheck(rook, 2, 4, grid);
+    });
 
-        it('Rook.moveStraight should move straight - north', function() {
-            moveStraightTrueCheck(rook, 4, 1, grid);
-        });
+    it('Rook.moveStraight should move straight - north', function() {
+        moveStraightTrueCheck(rook, 4, 1, grid);
+    });
 
-        it('Rook.moveStraight should move straight - south', function() {
-            moveStraightTrueCheck(rook, 4, 8, grid);
-        });
+    it('Rook.moveStraight should move straight - south', function() {
+        moveStraightTrueCheck(rook, 4, 8, grid);
+    });
 
-        it('Rook.moveStraight should move straight - east', function() {
-            moveStraightTrueCheck(rook, 8, 5, grid);
-        });
+    it('Rook.moveStraight should move straight - east', function() {
+        moveStraightTrueCheck(rook, 8, 5, grid);
+    });
 
-        it('Rook.moveStraight should move straight - west', function() {
-            moveStraightTrueCheck(rook, 1, 5, grid);
-        });
+    it('Rook.moveStraight should move straight - west', function() {
+        moveStraightTrueCheck(rook, 1, 5, grid);
+    });
 
-        it('Rook.setGrid should return false if it has incorrect values', function() {
-            var a = rook.setGrid(grid, null, 4, 5, 5);
-            var b = rook.setGrid(grid, 1, 4, null, 5);
-            var c = rook.setGrid(grid, 8, null, 5, null);
+    it('Rook.setGrid should return false if it has incorrect values', function() {
+        var a = rook.setGrid(grid, null, 4, 5, 5);
+        var b = rook.setGrid(grid, 1, 4, null, 5);
+        var c = rook.setGrid(grid, 8, null, 5, null);
 
-            expect(a).to.be.false;
-            expect(b).to.be.false;
-            expect(c).to.be.false;
-        });
+        expect(a).to.be.false;
+        expect(b).to.be.false;
+        expect(c).to.be.false;
     });
 });
