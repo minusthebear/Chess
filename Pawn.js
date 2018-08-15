@@ -25,64 +25,65 @@ Pawn.prototype.moveForward = function(x, y, grid) {
         diff = Math.abs(oldY - y);
 
     if (positionX !== x) {
+        console.log("line 28");
         return false;
     }
 
     if (piece.untouched) {
         if (diff < 1 && diff >= 3) {
+            console.log("line 34");
             return false;
         }
     }
 
-    if (!piece.untouched && y !== 1) {
+    if (!piece.untouched && diff !== 1) {
+        console.log("line 40");
         return false;
     }
 
-    if (piece.white) {
-        piece.position.y -= diff;
-    } else {
-        piece.position.y += diff;
+    if (piece.white && oldY <= y) {
+        return false;
+    } else if (!piece.white && oldY >= y) {
+        return false;
     }
 
     // Make so doesn't move if another player is in front.
 
-    grid.grid[positionX][oldY] = null;
-    grid.grid[positionX][piece.position.y] = piece;
-
+    piece.setPosition(x, y);
+    grid.grid[x][oldY] = null;
+    grid.grid[x][y] = piece;
     piece.untouched = false;
     return true;
 };
 
 Pawn.prototype.passing = function(x, y, grid) {
 
-    var piece = this;
-
     if (!grid.boundaryCheck(x, y)) {
         return false;
     }
 
-    for (var i = 0; i < records.allMatches.length; i++) {
-        if (records.allMatches[i].name === 'Matthew') {
-            grid = records.allMatches[i].grid;
-        }
-    }
+    var piece = this,
+        oldX = piece.position.x,
+        oldY = piece.position.y,
+        board = grid.grid,
+        diffX = Math.abs(x - oldX),
+        diffY = Math.abs(y - oldY);
 
-    var oldX = piece.position.x,
-        oldY = piece.position.y;
-
-    // This is not correct, figure out correct function
-    if (!grid[oldX - 1][oldY] && !grid[oldX + 1][oldY]) {
-        console.log("returning false?????");
+    if (diffX !== 1 || diffY !== 1) {
         return false;
     }
 
-    // This is not correct, figure out correct function
-    if (!(grid[oldX - 1][oldY] instanceof Pawn) && !(grid[oldX + 1][oldY] instanceof Pawn)) {
-        console.log("Not a pawn");
+    if (!board[x][oldY] || board[x][y]) {
         return false;
     }
 
-    console.log("All good!");
+    if (board[x][oldY].type === 'Pawn' && board[x][oldY].white !== piece.white) {
+        board[oldX][oldY] = null;
+        board[x][y] = piece;
+        piece.setPosition(x, y);
+        return true;
+    }
+    return false;
 }
 
 Pawn.prototype.take = function(x, y, grid) {
@@ -90,38 +91,32 @@ Pawn.prototype.take = function(x, y, grid) {
     if (!grid.boundaryCheck(x, y)) {
         return false;
     }
-    // Edit out grid
-    var grid,
-        yToCheck;
 
-    for (var i = 0; i < records.allMatches.length; i++) {
-        if (records.allMatches[i].name === 'Matthew') {
-            grid = records.allMatches[i].grid;
-        }
-    }
-
-    var piece = this,
+    var board = grid.grid,
+        yToCheck,
+        piece = this,
         oldX = piece.position.x,
-        oldY = piece.position.y;
+        oldY = piece.position.y,
+        diffX = Math.abs(x - oldX),
+        diffY = Math.abs(y - oldY);
 
-    if ((oldX - 1) !== x && (oldX + 1) !== x) {
-        console.log('Not a valid X');
+    if (diffX !== 1 || diffY !== 1) {
         return false;
     }
 
-    yToCheck = !!piece.white ? oldY + 1 : oldY - 1;
+    yToCheck = !!piece.white ? oldY - 1 : oldY + 1;
 
     if (yToCheck !== y) {
-        console.log(yToCheck);
         return false;
     }
 
-    if (grid[x][y] && (grid[x][y].white !== piece.white)) {
-        console.log('Taken');
-        grid[x][y] = piece;
-    } else {
-        console.log('Nobody here');
+    if (board[x][y] && (board[x][y].white !== piece.white)) {
+        board[oldX][oldY] = null;
+        board[x][y] = piece;
+        piece.setPosition(x, y);
+        return true;
     }
+    return false;
 };
 
 module.exports = Pawn;
