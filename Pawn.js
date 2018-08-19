@@ -1,9 +1,6 @@
 'use strict';
 
-var grid = require('./Grid'),
-    Piece = require('./Piece'),
-    // fix grid somehow;
-    records = require('./records');
+var Piece = require('./Piece');
 
 var Pawn = function(x, y, type, color) {
     Piece.call(this, x, y, type, color);

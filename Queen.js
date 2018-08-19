@@ -33,16 +33,15 @@ Queen.prototype.moveStraight = function(x, y, grid) {
 
                 if (this.checkIfOppositeColor(board, x, i)) {
                     oldObj = board[x][i];
-                    this.setGridStraight(grid, x, oldX, i, oldY);
+                    this.setGrid(grid, x, oldX, i, oldY);
                     this.unTouched = false;
                     grid.splicePiece(oldObj);
                     return true;
-                } else {
-                    return false;
                 }
+                return false;
             }
         }
-        this.setGridStraight(grid, x, oldX, y, oldY);
+        this.setGrid(grid, x, oldX, y, oldY);
         this.unTouched = false;
         return true;
     }
@@ -55,16 +54,15 @@ Queen.prototype.moveStraight = function(x, y, grid) {
 
                 if (this.checkIfOppositeColor(board, x, i)) {
                     var oldObj = board[x][i];
-                    this.setGridStraight(grid, x, oldX, i, oldY);
+                    this.setGrid(grid, x, oldX, i, oldY);
                     this.unTouched = false;
                     grid.splicePiece(oldObj);
                     return true;
-                } else {
-                    return false;
                 }
+                return false;
             }
         }
-        this.setGridStraight(grid, x, oldX, y, oldY);
+        this.setGrid(grid, x, oldX, y, oldY);
         this.unTouched = false;
         return true;
     }
@@ -77,16 +75,15 @@ Queen.prototype.moveStraight = function(x, y, grid) {
 
                 if (this.checkIfOppositeColor(board, i, y)) {
                     var oldObj = board[i][y];
-                    this.setGridStraight(grid, i, oldX, y, oldY);
+                    this.setGrid(grid, i, oldX, y, oldY);
                     this.unTouched = false;
                     grid.splicePiece(oldObj);
                     return true;
-                } else {
-                    return false;
                 }
+                return false;
             }
         }
-        this.setGridStraight(grid, x, oldX, y, oldY);
+        this.setGrid(grid, x, oldX, y, oldY);
         this.unTouched = false;
         return true;
     }
@@ -99,16 +96,15 @@ Queen.prototype.moveStraight = function(x, y, grid) {
 
                 if (this.checkIfOppositeColor(board, i, y)) {
                     var oldObj = board[i][y];
-                    this.setGridStraight(grid, i, oldX, y, oldY);
+                    this.setGrid(grid, i, oldX, y, oldY);
                     grid.splicePiece(oldObj);
                     this.unTouched = false;
                     return true;
-                } else {
-                    return false;
                 }
+                return false;
             }
         }
-        this.setGridStraight(grid, x, oldX, y, oldY);
+        this.setGrid(grid, x, oldX, y, oldY);
         this.unTouched = false;
         return true;
     }
@@ -204,32 +200,15 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
     return false;
 };
 
-Queen.prototype.setGridStraight = function(grid, x, oldX, y, oldY) {
+Queen.prototype.setGrid = function(grid, x, oldX, y, oldY) {
 
     if (!x || !y || !oldX || !oldY) {
         return false;
     }
 
-    if ((oldX === x && oldY !== y) || (oldX !== x && oldY === y)) {
-        this.setPosition(x, y);
-        grid.setPiece(x, y, oldX, oldY, this);
-        return true;
-    }
-    return false;
-};
-
-Queen.prototype.setGridDiagonal = function(grid, x, oldX, y, oldY) {
-
-    if (!x || !y || !oldX || !oldY) {
-        return false;
-    }
-
-    if (oldX !== x && oldY !== y) {
-        this.setPosition(x, y);
-        grid.setPiece(x, y, oldX, oldY, this);
-        return true;
-    }
-    return false;
+    this.setPosition(x, y);
+    grid.setPiece(x, y, oldX, oldY, this);
+    return true;
 };
 
 Queen.prototype.checkPiece = function(grid, numX, oldNumX, numY, oldNumY) {
@@ -237,7 +216,7 @@ Queen.prototype.checkPiece = function(grid, numX, oldNumX, numY, oldNumY) {
 
     if (this.checkIfOppositeColor.apply(this, [grid.grid, numX, numY])) {
         oldObj = grid.grid[numX][numY];
-        this.setGridDiagonal.apply(this, [grid, numX, oldNumX, numY, oldNumY]);
+        this.setGrid.apply(this, [grid, numX, oldNumX, numY, oldNumY]);
         grid.splicePiece(oldObj);
         return true;
     } else {
