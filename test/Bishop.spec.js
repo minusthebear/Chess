@@ -88,20 +88,32 @@ describe('bishop.js', function() {
             moveDiagonalFalseCheck(bishop, 4, 3, grid);
         });
 
-        it('Bishop.move should move one space', function() {
+        it('Bishop.move should move, x - 7, y - 3', function() {
             moveDiagonalTrueCheck(bishop, 7, 3, grid);
         });
 
-        it('Bishop.move should move one space', function() {
+        it('Bishop.move should move, x - 3, y - 7', function() {
             moveDiagonalTrueCheck(bishop, 3, 7, grid);
         });
 
-        it('Bishop.move should move one space', function() {
+        it('Bishop.move should move, x - 7, y - 7', function() {
             moveDiagonalTrueCheck(bishop, 7, 7, grid);
         });
 
-        it('Bishop.move should move one space', function() {
-            moveDiagonalTrueCheck(bishop, 3, 3, grid);
+        it('Bishop.move should move, x - 8, y - 8', function() {
+            moveDiagonalTrueCheck(bishop, 8, 8, grid);
+        });
+
+        it('Bishop.move should move, x - 1, y - 1', function() {
+            moveDiagonalTrueCheck(bishop, 1, 1, grid);
+        });
+
+        it('Bishop.move should move, x - 8, y - 2', function() {
+            moveDiagonalTrueCheck(bishop, 8, 2, grid);
+        });
+
+        it('Bishop.move should move, x - 2, y - 8', function() {
+            moveDiagonalTrueCheck(bishop, 2, 8, grid);
         });
     });
 });

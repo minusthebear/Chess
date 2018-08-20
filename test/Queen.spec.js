@@ -130,15 +130,14 @@ describe('queen.js', function() {
         });
 
         it('Queen.setGridStraight should return false if it has incorrect values', function() {
-            var a = queen.setGridStraight(grid, null, 4, 5, 5);
-            var b = queen.setGridStraight(grid, 1, 4, null, 5);
-            var c = queen.setGridStraight(grid, 8, null, 5, null);
+            var a = queen.setGrid(grid, null, 4, 5, 5);
+            var b = queen.setGrid(grid, 1, 4, null, 5);
+            var c = queen.setGrid(grid, 8, null, 5, null);
 
             expect(a).to.be.false;
             expect(b).to.be.false;
             expect(c).to.be.false;
         });
-
     });
 
 
@@ -177,6 +176,22 @@ describe('queen.js', function() {
 
         it('Queen.moveDiagonal should move one space', function() {
             moveDiagonalTrueCheck(queen, 3, 3, grid);
+        });
+
+        it('Queen.move should move, x - 8, y - 8', function() {
+            moveDiagonalTrueCheck(queen, 8, 8, grid);
+        });
+
+        it('Queen.move should move, x - 1, y - 1', function() {
+            moveDiagonalTrueCheck(queen, 1, 1, grid);
+        });
+
+        it('Queen.move should move, x - 8, y - 2', function() {
+            moveDiagonalTrueCheck(queen, 8, 2, grid);
+        });
+
+        it('Queen.move should move, x - 2, y - 8', function() {
+            moveDiagonalTrueCheck(queen, 2, 8, grid);
         });
     });
 });

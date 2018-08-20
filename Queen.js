@@ -136,12 +136,10 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX - i][oldY - i]) {
-                this.checkPiece.apply(this, [grid, oldX - 1, oldX, oldY - 1, oldY]);
-                return true;
+                return this.checkPiece.apply(this, [grid, oldX - 1, oldX, oldY - 1, oldY]);
             }
         }
-        this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
-        return true;
+        return this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
     }
 
     if (oldX > x && oldY < y) {
@@ -154,12 +152,10 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX - i][oldY + i]) {
-                this.checkPiece.apply(this, [grid, oldX - 1, oldX, oldY + i, oldY]);
-                return true;
+                return this.checkPiece.apply(this, [grid, oldX - i, oldX, oldY + i, oldY]);
             }
         }
-        this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
-        return true;
+        return this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
     }
 
     if (oldX < x && oldY > y) {
@@ -172,12 +168,10 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX + i][oldY - i]) {
-                this.checkPiece.apply(this, [grid, oldX + 1, oldX, oldY + i, oldY]);
-                return true;
+                return this.checkPiece.apply(this, [grid, oldX + i, oldX, oldY + i, oldY]);
             }
         }
-        this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
-        return true;
+        return this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
     }
 
     if (oldX < x && oldY < y) {
@@ -190,12 +184,10 @@ Queen.prototype.moveDiagonal = function(x, y, grid) {
 
         for (var i = 1; i <= xToCheck; i++) {
             if (grid.grid[oldX - i][oldY - i]) {
-                this.checkPiece.apply(this, [grid, oldX + 1, oldX, oldY + i, oldY]);
-                return true;
+                return this.checkPiece.apply(this, [grid, oldX + 1, oldX, oldY + i, oldY]);
             }
         }
-        this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
-        return true;
+        return this.checkPiece.apply(this, [grid, x, oldX, y, oldY]);
     }
     return false;
 };
