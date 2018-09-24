@@ -132,7 +132,6 @@ King.prototype.checkPiece = function(grid, numX, oldNumX, numY, oldNumY) {
     }
 };
 
-
 King.prototype.castle = function(rook, grid) {
 
     var king = this;
