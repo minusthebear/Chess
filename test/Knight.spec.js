@@ -129,4 +129,25 @@ describe('knight.js', function() {
             moveDiagonalTrueCheck(knight, 3, 6, grid);
         });
     });
+
+    describe('knight.move can not move out of boundary', function() {
+        beforeEach(function() {
+
+            grid = initializeGrid();
+
+            knight = new Knight(2, 1, 'Knight', true);
+            var obj = {
+                'white': {
+                    'knights': [knight]
+                }
+            }
+            grid.setAllObjects(obj);
+            grid.setStartPosOnGrid(2, 1, knight);
+        });
+
+        it('Knight.move should not make invalid moves', function() {
+            moveDiagonalFalseCheck(knight, 1, 0, grid);
+            moveDiagonalFalseCheck(knight, 0, 1, grid);
+        });
+    });
 });
