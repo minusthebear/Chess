@@ -6,6 +6,7 @@ var splicePiece = require('./records').splicePiece,
     Bishop = require('./Bishop'),
     Rook = require('./Rook'),
     Queen = require('./Queen'),
+    King = require('./King'),
     Grid = require('./Grid');
 
 function initializeGrid() {
@@ -47,6 +48,7 @@ function initializeGame() {
         allObjects[color].knights = initializeKnights(grid, homeTeam, initRearYPosition);
         allObjects[color].rooks = initializeRooks(grid, homeTeam, initRearYPosition);
         allObjects[color].queens = initializeQueens(grid, homeTeam, initRearYPosition);
+        allObjects[color].kings = initializeKings(grid, homeTeam, initRearYPosition);
     }
     grid.setAllObjects(allObjects);
 
@@ -101,4 +103,13 @@ function initializeQueens(grid, team, Y) {
 
     return queens;
 }
+
+function initializeKings(grid, team, Y) {
+    var king = new King(5, Y, 'King', team),
+        kings = [king];
+    grid.setStartPosOnGrid(5, Y, king);
+
+    return kings;
+}
+
 module.exports = initializeGame();

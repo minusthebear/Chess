@@ -78,6 +78,11 @@ describe('Main.js', function() {
             testAllObjects('white', 'queens', 'Queen', 1);
             testAllObjects('black', 'queens', 'Queen', 1);
         });
+
+        it('Kings should be set correctly', function() {
+            testAllObjects('white', 'kings', 'King', 1);
+            testAllObjects('black', 'kings', 'King', 1);
+        });
     });
 
     function testAllObjects(color, piece, name, length) {
